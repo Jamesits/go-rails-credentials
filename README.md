@@ -8,11 +8,23 @@ Golang library, standalone CLI tool and Tofu provider for Rails credentials file
 
 ### CLI
 
-- `rails-credentails show`
-- `rails-credentials edit`
+- `rails-credentails show` as a drop-in replacement for `rails credentials:show`
+- `rails-credentials edit` as a drop-in replacement for `rails credentials:edit`
 
-See the embedded help for detailed usage.
+Notes:
+
+- Run under the root directory of your Rails project; alternatively, use `--base-dir <dir>` to set your project directory
+- `RAILS_ENV` and `RAILS_MASTER_KEY` will work as intended; use `--master-key-file <path>` and `--credentials-file <path>` if the files are not at the default path
+- See the embedded help for detailed usage
 
 ### OpenTofu / Terraform provider
 
 TBD.
+
+## Development
+
+### Building
+
+```shell
+goreleaser build --snapshot --clean
+```
