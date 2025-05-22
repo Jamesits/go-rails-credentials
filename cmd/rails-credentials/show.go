@@ -6,6 +6,11 @@ import (
 	"os"
 )
 
+const (
+	missingKeyMessageTemplate         = "Missing '%s' to decrypt credentials. See `%s`."
+	missingCredentialsMessageTemplate = "File '%s' does not exist. Use \"%s` to change that.\n"
+)
+
 type Show struct{}
 
 func (cmd *Show) Run(cli *Cli) error {
@@ -15,12 +20,17 @@ func (cmd *Show) Run(cli *Cli) error {
 
 	e, err := os.ReadFile(cli.EncryptedCredentialsFile)
 	if err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, missingCredentialsMessageTemplate, cli.EncryptedCredentialsFile, executable("edit"))
 		return fmt.Errorf("read encrypted file failed: %w", err)
 	}
 
 	rawObject, err = credentials.Decrypt(cli.MasterKey, string(e))
 	if err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, decryptFailedTemplate, cli.EncryptedCredentialsFile)
+		if cli.masterKeyGenerated {
+			_, _ = fmt.Fprintf(os.Stderr, missingKeyMessageTemplate, cli.MasterKeyFile, executable("--help"))
+		} else {
+			_, _ = fmt.Fprintf(os.Stderr, decryptFailedTemplate, cli.EncryptedCredentialsFile)
+		}
 		return fmt.Errorf("decrypt failed: %w", err)
 	}
 

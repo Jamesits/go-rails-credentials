@@ -23,9 +23,12 @@ If you lose the key, no one, including you, can access anything encrypted with i
 
       create  %s
 `
-	editorStartTemplate   = `Editing %s...`
-	decryptFailedTemplate = `Couldn't decrypt %s. Perhaps you passed the wrong key?`
-	savedTemplate         = `File encrypted and saved.`
+	editorStartTemplate = `Editing %s...
+`
+	decryptFailedTemplate = `Couldn't decrypt %s. Perhaps you passed the wrong key?
+`
+	savedTemplate = `File encrypted and saved.
+`
 )
 
 func (cmd *Edit) Run(cli *Cli) error {
@@ -99,11 +102,16 @@ func (cmd *Edit) Run(cli *Cli) error {
 		return fmt.Errorf("editor failed with code %d: %w", editorCmd.ProcessState.ExitCode(), err)
 	}
 
-	// encrypt the file
+	// read back
 	newRawCredentialsFileContent, err := os.ReadFile(editorTempFile.Name())
 	if err != nil {
 		return fmt.Errorf("unable to read temporary file: %w", err)
 	}
+	if string(newRawCredentialsFileContent) == rawCredentialsFileContent {
+		return nil
+	}
+
+	// encrypt the file
 	newObject, err := credentials.MarshalSingleString(string(newRawCredentialsFileContent))
 	if err != nil {
 		return fmt.Errorf("unable to marshal object: %w", err)

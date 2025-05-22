@@ -11,15 +11,19 @@ import (
 	"strings"
 )
 
+func executable(s ...string) string {
+	return strings.Join(append([]string{os.Args[0]}, s...), " ")
+}
+
 type Cli struct {
 	Edit Edit "cmd:\"\" help:\"Open the decrypted credentials in `$VISUAL` or `$EDITOR` for editing\""
 	Show Show `cmd:"" help:"Show the decrypted credentials"`
 
 	BaseDir                  string `name:"base-dir" default:"." type:"existingdir"`
 	Environment              string `name:"environment" env:"RAILS_ENV"`
-	MasterKey                string `name:"master-key" env:"RAILS_MASTER_KEY" help:"your master key; it's not recommended to provide this argument from CLI.'"`
+	MasterKey                string `name:"master-key" env:"RAILS_MASTER_KEY" help:"Your master key. For security, please do not provide this value by CLI argument; use the environment variable or a file instead."`
 	MasterKeyFile            string `name:"master-key-file"`
-	EncryptedCredentialsFile string `name:"credentials"`
+	EncryptedCredentialsFile string `name:"credentials-file"`
 
 	masterKeyGenerated bool
 }
@@ -55,7 +59,7 @@ func (cli *Cli) AfterApply() error {
 			cli.MasterKey = strings.Trim(string(m), "\r\n")
 		}
 	}
-	// If for some reason we are unable to read the existing credentials file, just generate a new one:
+	// If for some reason we are unable to read the existing credentials file, generate a new one:
 	if cli.MasterKey == "" {
 		cli.MasterKey, err = credentials.RandomMasterKey()
 		cli.masterKeyGenerated = true
