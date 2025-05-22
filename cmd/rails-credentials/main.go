@@ -19,11 +19,11 @@ type Cli struct {
 	Edit Edit "cmd:\"\" help:\"Open the decrypted credentials in `$VISUAL` or `$EDITOR` for editing\""
 	Show Show `cmd:"" help:"Show the decrypted credentials"`
 
-	BaseDir                  string `name:"base-dir" default:"." type:"existingdir"`
+	BaseDir                  string `name:"base-dir" default:"." type:"existingdir" help:"Root directory of your Rails project."`
 	Environment              string `name:"environment" env:"RAILS_ENV"`
 	MasterKey                string `name:"master-key" env:"RAILS_MASTER_KEY" help:"Your master key. For security, please do not provide this value by CLI argument; use the environment variable or a file instead."`
-	MasterKeyFile            string `name:"master-key-file"`
-	EncryptedCredentialsFile string `name:"credentials-file"`
+	MasterKeyFile            string `name:"master-key-file" help:"Path to your master.key file."`
+	EncryptedCredentialsFile string `name:"credentials-file" help:"Path to your credential.yml.enc file."`
 
 	masterKeyGenerated bool
 }

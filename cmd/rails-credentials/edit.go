@@ -11,7 +11,7 @@ import (
 )
 
 type Edit struct {
-	EditorCommand string `name:"editor" env:"VISUAL,EDITOR" default:"vi" help:"your editor program"`
+	EditorCommand string `name:"editor" env:"VISUAL,EDITOR" default:"vi" help:"Your editor program."`
 }
 
 const (
