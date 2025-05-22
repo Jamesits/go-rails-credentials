@@ -23,12 +23,9 @@ If you lose the key, no one, including you, can access anything encrypted with i
 
       create  %s
 `
-	editorStartTemplate = `Editing %s...
-`
-	decryptFailedTemplate = `Couldn't decrypt %s. Perhaps you passed the wrong key?
-`
-	savedTemplate = `File encrypted and saved.
-`
+	editorStartTemplate   = "Editing %s...\n"
+	decryptFailedTemplate = "Couldn't decrypt %s. Perhaps you passed the wrong key?\n"
+	savedTemplate         = "File encrypted and saved.\n"
 )
 
 func (cmd *Edit) Run(cli *Cli) error {
@@ -37,11 +34,7 @@ func (cmd *Edit) Run(cli *Cli) error {
 	// if creation of a new master key is needed
 	if cli.masterKeyGenerated {
 		_, _ = fmt.Fprintf(os.Stderr, masterKeyCreateTemplate, cli.MasterKey, cli.MasterKeyFile)
-		err = os.MkdirAll(filepath.Dir(cli.MasterKeyFile), 0o777)
-		if err != nil {
-			return fmt.Errorf("unable to create config directory: %w", err)
-		}
-		err = os.WriteFile(cli.MasterKeyFile, []byte(cli.MasterKey), 0o600)
+		err = atomicWrite(cli.MasterKeyFile, []byte(cli.MasterKey), 0o600, 0o777)
 		if err != nil {
 			return fmt.Errorf("write master key file failed: %w", err)
 		}
@@ -121,17 +114,35 @@ func (cmd *Edit) Run(cli *Cli) error {
 		return fmt.Errorf("unable to encrypt: %w", err)
 	}
 
-	// atomic write
-	writeTempFileName := cli.EncryptedCredentialsFile + ".tmp"
-	err = os.WriteFile(writeTempFileName, []byte(newEncryptedCredentialsFileContent), 0o666)
+	err = atomicWrite(cli.EncryptedCredentialsFile, []byte(newEncryptedCredentialsFileContent), 0o666, 0o777)
 	if err != nil {
 		return fmt.Errorf("unable to save encrypted file: %w", err)
 	}
-	err = os.Rename(writeTempFileName, cli.EncryptedCredentialsFile)
+	_, _ = fmt.Fprintf(os.Stderr, savedTemplate)
+	return nil
+}
+
+func atomicWrite(path string, content []byte, filePerm os.FileMode, dirPerm os.FileMode) error {
+	var err error
+
+	temp := path + ".tmp"
+	_ = os.Remove(temp)
+
+	err = os.MkdirAll(filepath.Dir(path), dirPerm)
 	if err != nil {
-		return fmt.Errorf("unable to overwrite encrypted file: %w", err)
+		return fmt.Errorf("unable to create directory: %w", err)
 	}
 
-	_, _ = fmt.Fprintf(os.Stderr, savedTemplate)
+	err = os.WriteFile(temp, content, filePerm)
+	if err != nil {
+		return fmt.Errorf("unable to write temporary file: %w", err)
+	}
+	defer os.Remove(temp)
+
+	err = os.Rename(temp, path)
+	if err != nil {
+		return fmt.Errorf("unable to overwrite destination file: %w", err)
+	}
+
 	return nil
 }
