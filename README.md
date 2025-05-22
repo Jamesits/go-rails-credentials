@@ -1,10 +1,14 @@
-# Rails Credentials CLI
+# Rails Credentials
 
 Golang library, standalone CLI tool and Tofu provider for Rails credentials files operations.
 
 ![Works - On My Machine](https://img.shields.io/badge/Works-On_My_Machine-2ea44f) ![Project Status - Premature](https://img.shields.io/badge/Project_Status-Premature-yellow)
 
 ## Usage
+
+### Library
+
+[![Go Reference](https://pkg.go.dev/badge/github.com/jamesits/go-rails-credentials/pkg/credentials.svg)](https://pkg.go.dev/github.com/jamesits/go-rails-credentials/pkg/credentials)
 
 ### CLI
 
