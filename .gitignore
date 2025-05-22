@@ -1,3 +1,5 @@
+/config
+
 *.dll
 *.exe
 .DS_Store
