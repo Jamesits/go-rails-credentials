@@ -8,7 +8,7 @@ Golang library, standalone CLI tool and Tofu provider for Rails credentials file
 
 ### CLI
 
-- `rails-credentails show` as a drop-in replacement for `rails credentials:show`
+- `rails-credentials show` as a drop-in replacement for `rails credentials:show`
 - `rails-credentials edit` as a drop-in replacement for `rails credentials:edit`
 
 Notes:
