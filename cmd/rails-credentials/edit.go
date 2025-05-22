@@ -120,9 +120,16 @@ func (cmd *Edit) Run(cli *Cli) error {
 	if err != nil {
 		return fmt.Errorf("unable to encrypt: %w", err)
 	}
-	err = os.WriteFile(cli.EncryptedCredentialsFile, []byte(newEncryptedCredentialsFileContent), 0o666)
+
+	// atomic write
+	writeTempFileName := cli.EncryptedCredentialsFile + ".tmp"
+	err = os.WriteFile(writeTempFileName, []byte(newEncryptedCredentialsFileContent), 0o666)
 	if err != nil {
-		return fmt.Errorf("unable to write encrypted file: %w", err)
+		return fmt.Errorf("unable to save encrypted file: %w", err)
+	}
+	err = os.Rename(writeTempFileName, cli.EncryptedCredentialsFile)
+	if err != nil {
+		return fmt.Errorf("unable to overwrite encrypted file: %w", err)
 	}
 
 	_, _ = fmt.Fprintf(os.Stderr, savedTemplate)
