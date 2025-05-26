@@ -21,9 +21,6 @@ builds:
     ignore:
       - goos: 'darwin'
         goarch: '386'
-      # missing cipher.NewGCMWithRandomNonce
-      - goos: 'freebsd'
-        goarch: 'arm'
     binary: 'rails-credentials'
   # Tofu provider
   - id: 'provider'
@@ -43,9 +40,6 @@ builds:
     ignore:
       - goos: 'darwin'
         goarch: '386'
-      # missing cipher.NewGCMWithRandomNonce
-      - goos: 'freebsd'
-        goarch: 'arm'
     binary: 'terraform-provider-railscred_v{{ .Version }}'
 
 archives:
