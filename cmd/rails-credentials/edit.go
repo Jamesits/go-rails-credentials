@@ -118,7 +118,7 @@ func (cmd *Edit) Run(cli *Cli) error {
 	if err != nil {
 		return fmt.Errorf("unable to save encrypted file: %w", err)
 	}
-	_, _ = fmt.Fprintf(os.Stderr, savedTemplate)
+	_, _ = fmt.Fprint(os.Stderr, savedTemplate)
 	return nil
 }
 

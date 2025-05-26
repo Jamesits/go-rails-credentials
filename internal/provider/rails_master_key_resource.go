@@ -77,8 +77,6 @@ func (r *RailsMasterKeyResource) Create(ctx context.Context, req resource.Create
 }
 
 func (r *RailsMasterKeyResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	return
-
 	//var data RailsMasterKeyResourceModel
 	//
 	//// Read Terraform prior state data into the model
@@ -107,8 +105,6 @@ func (r *RailsMasterKeyResource) Update(ctx context.Context, req resource.Update
 }
 
 func (r *RailsMasterKeyResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	return
-
 	//var data RailsMasterKeyResourceModel
 
 	// Read Terraform prior state data into the model

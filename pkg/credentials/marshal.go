@@ -10,11 +10,11 @@ import (
 // https://github.com/hyrious/marshal
 // https://unfit-for.work/posts/2023/rails-go-shared-credentials/
 
-// UnmarshalSingleString extracts a single string from the marshalled object.
+// UnmarshalSingleString extracts a single string from a Ruby marshalled object.
 // The string must be the first item. Everything else is discarded.
 func UnmarshalSingleString(marshalledObject []byte) (string, error) {
 	// version
-	if !(marshalledObject[0] == 0x04 && marshalledObject[1] == 0x08) {
+	if (marshalledObject[0] != 0x04) || (marshalledObject[1] != 0x08) {
 		return "", fmt.Errorf("unknown marshal format %02x%02x", marshalledObject[0], marshalledObject[1])
 	}
 

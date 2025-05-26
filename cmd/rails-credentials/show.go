@@ -39,6 +39,6 @@ func (cmd *Show) Run(cli *Cli) error {
 		return fmt.Errorf("unmarshal failed: %w", err)
 	}
 
-	_, _ = fmt.Fprintf(os.Stdout, rawString)
+	_, _ = fmt.Fprint(os.Stdout, rawString)
 	return nil
 }

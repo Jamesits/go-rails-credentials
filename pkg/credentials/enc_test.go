@@ -45,6 +45,7 @@ func TestLoop(t *testing.T) {
 		assert.NoError(t, err)
 
 		ser, err := MarshalSingleString(p.PlainTextData)
+		assert.NoError(t, err)
 
 		enc, err := Encrypt(mk, ser)
 		assert.NoError(t, err)

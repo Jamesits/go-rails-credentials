@@ -25,6 +25,22 @@ Notes:
 
 ### OpenTofu / Terraform Provider
 
+Decrypt the credentials on the fly:
+
+```hcl
+data "railscred_file" "example" {
+  master_key        = file("${path.module}/config/master.key")
+  encrypted_content = file("${path.module}/config/credentials.yml.enc")
+}
+
+output "credentials" {
+  value     = data.railscred_file.example.content
+  sensitive = true
+}
+```
+
+Manage the plaintext credentials inside the Tofu config:
+
 ```hcl
 resource "railscred_master_key" "example" {}
 
@@ -49,7 +65,6 @@ resource "kubernetes_secret_v1" "rails" {
     name      = "rails"
     namespace = "application"
   }
-
   data = {
     "RAILS_MASTER_KEY" = railscred_master_key.example.master_key
   }
@@ -60,7 +75,6 @@ resource "kubernetes_secret_v1" "rails_credentials" {
     name      = "rails-credentials"
     namespace = "application"
   }
-
   data = {
     "credentials.yml.enc" = data.railscred_inline.example.content
   }
@@ -96,10 +110,6 @@ resource "kubernetes_deployment_v1" "rails" {
             sub_path   = "credentials.yml.enc"
             read_only  = true
           }
-          port {
-            name           = "http"
-            container_port = 3000
-          }
         }
       }
     }
@@ -115,7 +125,7 @@ resource "kubernetes_deployment_v1" "rails" {
 goreleaser build --snapshot --clean
 ```
 
-### Local Development Notes
+### Tofu Provider Testing
 
 To use the Tofu provider locally:
 
@@ -123,7 +133,7 @@ To use the Tofu provider locally:
 cat > .terraformrc <<EOF
 provider_installation {
     dev_overrides {
-        "jamesits/railscred" = "./dist/provider/linux_amd64_v1"
+        "jamesits/railscred" = "./dist/provider_linux_amd64_v1"
     }
     direct {}
 }

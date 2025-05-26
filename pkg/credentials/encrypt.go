@@ -14,8 +14,11 @@ import (
 // https://github.com/rails/rails/blob/04df9bc3d120b51447bde54caa56e9237cb8da0e/activesupport/lib/active_support/message_encryptor.rb
 
 const (
+	// MasterKeyLengthBytes is the length of the master key in bytes.
+	// AES-128-GCM requires a 16-byte key.
 	MasterKeyLengthBytes = 16
 
+	// Separator for the encrypted content, IV and tag.
 	// https://github.com/rails/rails/blob/04df9bc3d120b51447bde54caa56e9237cb8da0e/activesupport/lib/active_support/message_encryptor.rb#L119
 	Separator = "--"
 
@@ -27,6 +30,7 @@ const (
 
 var Base64Encoding = base64.StdEncoding
 
+// RandomMasterKey generates a random master key.
 func RandomMasterKey() (string, error) {
 	key := make([]byte, MasterKeyLengthBytes)
 	_, err := rand.Read(key)
@@ -36,6 +40,10 @@ func RandomMasterKey() (string, error) {
 	return hex.EncodeToString(key), nil
 }
 
+// Decrypt decrypts the encrypted file content using the master key.
+// The master key should be a hex-encoded string of 32 hex characters (16 bytes).
+// The encrypted file content is expected to be in the format:
+// <base64-encoded-content><Separator><base64-encoded-iv><Separator><base64-encoded-tag>
 func Decrypt(MasterKey string, EncryptedFileContent string) (DecryptedFileContent []byte, err error) {
 	key, err := hex.DecodeString(MasterKey)
 	if err != nil {
@@ -76,6 +84,7 @@ func Decrypt(MasterKey string, EncryptedFileContent string) (DecryptedFileConten
 	return decryptedFileContent, nil
 }
 
+// Encrypt encrypts the raw file content using the master key.
 func Encrypt(MasterKey string, RawFileContent []byte) (EncryptedFileContent string, err error) {
 	key, err := hex.DecodeString(MasterKey)
 	if err != nil {
