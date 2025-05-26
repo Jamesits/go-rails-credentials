@@ -20,6 +20,7 @@ See [edit.go](cmd/rails-credentials/edit.go) for a complete example.
 Environment variables:
 
 - `RAILS_ENV` and `RAILS_MASTER_KEY` work as intended
+- `VISUAL` or `EDITOR` specifies the editor to use for `edit` command
 
 Command line arguments:
 
