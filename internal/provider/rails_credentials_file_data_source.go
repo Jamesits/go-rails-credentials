@@ -70,7 +70,7 @@ func (d *RailsCredentialsFileDataSource) Read(ctx context.Context, req datasourc
 		return
 	}
 
-	rawObject, err := credentials.Decrypt(data.MasterKey.ValueString(), data.EncryptedContent.ValueString())
+	rawObject, err := credentials.Decrypt(credentials.SanitizeMasterKey(data.MasterKey.ValueString()), data.EncryptedContent.ValueString())
 	if err != nil {
 		resp.Diagnostics.AddError("Credentials decryption failed", err.Error())
 		return

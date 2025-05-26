@@ -38,8 +38,11 @@ func (r *RailsMasterKeyResource) Schema(ctx context.Context, req resource.Schema
 
 		Attributes: map[string]schema.Attribute{
 			"master_key": schema.StringAttribute{
-				Computed:            true,
 				MarkdownDescription: "The master key",
+
+				Computed:  true,
+				Sensitive: true,
+
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},

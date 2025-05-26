@@ -51,12 +51,13 @@ func (cli *Cli) AfterApply() error {
 		}
 	}
 
+	cli.MasterKey = credentials.SanitizeMasterKey(cli.MasterKey)
 	// If RAILS_MASTER_KEY environment variable is set, we use it instead of the file content.
 	// Otherwise, try read an existing master key.
 	if cli.MasterKey == "" {
 		m, err := os.ReadFile(cli.MasterKeyFile)
 		if err == nil {
-			cli.MasterKey = strings.Trim(string(m), "\r\n")
+			cli.MasterKey = credentials.SanitizeMasterKey(string(m))
 		} else if !os.IsNotExist(err) {
 			return fmt.Errorf("unable to read master key file %s: %w", cli.MasterKeyFile, err)
 		}

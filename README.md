@@ -2,7 +2,7 @@
 
 Golang library, standalone CLI tool and Tofu provider for Rails credentials files operations.
 
-![Works - On My Machine](https://img.shields.io/badge/Works-On_My_Machine-2ea44f) ![Project Status - Premature](https://img.shields.io/badge/Project_Status-Premature-yellow)
+![Works - On My Machine](https://img.shields.io/badge/Works-On_My_Machine-2ea44f) ![Project Status - Feature Complete](https://img.shields.io/badge/Project_Status-Feature_Complete-2ea44f)
 
 ## Usage
 
@@ -19,9 +19,11 @@ See [edit.go](cmd/rails-credentials/edit.go) for a complete example.
 
 Notes:
 
-- Run under the root directory of your Rails project; alternatively, use `--base-dir <dir>` to set your project directory
-- `RAILS_ENV` and `RAILS_MASTER_KEY` will work as intended; use `--master-key-file <path>` and `--credentials-file <path>` if the files are not at the default path
+- Run under the root directory of your Rails project; alternatively, set `--base-dir <dir>` to your project directory
+- `RAILS_ENV` and `RAILS_MASTER_KEY` will work as intended; use `--master-key-file <path>` and `--credentials-file <path>` if these files are not at the default path
 - See the embedded help for detailed usage
+- Rails refuse to work if `master.key` has a newline at the end; our parser is more relax on this issue
+- `rails credentials:diff` is not planned for now; contributions are welcomed
 
 ### OpenTofu / Terraform Provider
 

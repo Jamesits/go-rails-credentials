@@ -75,7 +75,7 @@ func (d *RailsCredentialsInlineDataSource) Read(ctx context.Context, req datasou
 		resp.Diagnostics.AddError("Credentials marshal failed", err.Error())
 		return
 	}
-	encryptedString, err := credentials.Encrypt(data.MasterKey.ValueString(), rawObject)
+	encryptedString, err := credentials.Encrypt(credentials.SanitizeMasterKey(data.MasterKey.ValueString()), rawObject)
 	if err != nil {
 		resp.Diagnostics.AddError("Credentials encryption failed", err.Error())
 		return

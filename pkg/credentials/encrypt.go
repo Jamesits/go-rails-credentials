@@ -3,7 +3,6 @@ package credentials
 import (
 	"crypto/aes"
 	"crypto/cipher"
-	"crypto/rand"
 	"encoding/base64"
 	"encoding/hex"
 	"fmt"
@@ -14,10 +13,6 @@ import (
 // https://github.com/rails/rails/blob/04df9bc3d120b51447bde54caa56e9237cb8da0e/activesupport/lib/active_support/message_encryptor.rb
 
 const (
-	// MasterKeyLengthBytes is the length of the master key in bytes.
-	// AES-128-GCM requires a 16-byte key.
-	MasterKeyLengthBytes = 16
-
 	// Separator for the encrypted content, IV and tag.
 	// https://github.com/rails/rails/blob/04df9bc3d120b51447bde54caa56e9237cb8da0e/activesupport/lib/active_support/message_encryptor.rb#L119
 	Separator = "--"
@@ -29,16 +24,6 @@ const (
 )
 
 var Base64Encoding = base64.StdEncoding
-
-// RandomMasterKey generates a random master key.
-func RandomMasterKey() (string, error) {
-	key := make([]byte, MasterKeyLengthBytes)
-	_, err := rand.Read(key)
-	if err != nil {
-		return "", fmt.Errorf("random geneartor error: %w", err)
-	}
-	return hex.EncodeToString(key), nil
-}
 
 // Decrypt decrypts the encrypted file content using the master key.
 // The master key should be a hex-encoded string of 32 hex characters (16 bytes).
