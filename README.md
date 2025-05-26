@@ -1,6 +1,6 @@
 # Rails Credentials
 
-Golang library, standalone CLI tool and Tofu provider for Rails credentials files operations.
+Golang library, CLI tool and OpenTofu/Terraform provider for Ruby on Rails credentials files encryption/decryption.
 
 ![Works - On My Machine](https://img.shields.io/badge/Works-On_My_Machine-2ea44f) ![Project Status - Feature Complete](https://img.shields.io/badge/Project_Status-Feature_Complete-2ea44f)
 
@@ -17,11 +17,18 @@ See [edit.go](cmd/rails-credentials/edit.go) for a complete example.
 - `rails-credentials show` as a drop-in replacement for `rails credentials:show`
 - `rails-credentials edit` as a drop-in replacement for `rails credentials:edit`
 
+Environment variables:
+
+- `RAILS_ENV` and `RAILS_MASTER_KEY` work as intended
+
+Command line arguments:
+
+- Run under the root directory of your Rails project or set `--base-dir <dir>` to your project directory
+- If your files are not at the default location, use `--master-key-file <path>` and `--credentials-file <path>` to set the paths explicitly; `config.credentials.{content,key}_path` does not work
+- See the embedded help (`rails-credentials --help`) for detailed usage
+
 Notes:
 
-- Run under the root directory of your Rails project; alternatively, set `--base-dir <dir>` to your project directory
-- `RAILS_ENV` and `RAILS_MASTER_KEY` will work as intended; use `--master-key-file <path>` and `--credentials-file <path>` if these files are not at the default path
-- See the embedded help for detailed usage
 - Rails refuse to work if `master.key` has a newline at the end; our parser is more relax on this issue
 - `rails credentials:diff` is not planned for now; contributions are welcomed
 
