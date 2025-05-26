@@ -17,4 +17,4 @@ Random-generated Rails master key
 
 ### Read-Only
 
-- `master_key` (String) The master key
+- `master_key` (String, Sensitive) The master key
