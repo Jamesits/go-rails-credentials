@@ -1,6 +1,6 @@
 resource "railscred_master_key" "example" {}
 
-data "railscred_provider" "example" {
+data "railscred_inline" "example" {
   master_key = railscred_master_key.example.master_key
   content    = <<-EOT
 # smtp:

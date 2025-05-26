@@ -8,7 +8,9 @@ Golang library, standalone CLI tool and Tofu provider for Rails credentials file
 
 ### Library
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/jamesits/go-rails-credentials/pkg/credentials.svg)](https://pkg.go.dev/github.com/jamesits/go-rails-credentials/pkg/credentials)
+GoDoc: [![Go Reference](https://pkg.go.dev/badge/github.com/jamesits/go-rails-credentials/pkg/credentials.svg)](https://pkg.go.dev/github.com/jamesits/go-rails-credentials/pkg/credentials)
+
+See [edit.go](cmd/rails-credentials/edit.go) for a complete example.
 
 ### CLI
 
@@ -21,9 +23,89 @@ Notes:
 - `RAILS_ENV` and `RAILS_MASTER_KEY` will work as intended; use `--master-key-file <path>` and `--credentials-file <path>` if the files are not at the default path
 - See the embedded help for detailed usage
 
-### OpenTofu / Terraform provider
+### OpenTofu / Terraform Provider
 
-TBD.
+```hcl
+resource "railscred_master_key" "example" {}
+
+data "railscred_inline" "example" {
+  master_key = railscred_master_key.example.master_key
+  content    = <<-EOT
+# smtp:
+#   user_name: my-smtp-user
+#   password: my-smtp-password
+#
+# aws:
+#   access_key_id: 123
+#   secret_access_key: 345
+
+# Used as the base secret for all MessageVerifiers in Rails, including the one protecting cookies.
+secret_key_base:
+EOT
+}
+
+resource "kubernetes_secret_v1" "rails" {
+  metadata {
+    name      = "rails"
+    namespace = "application"
+  }
+
+  data = {
+    "RAILS_MASTER_KEY" = railscred_master_key.example.master_key
+  }
+}
+
+resource "kubernetes_secret_v1" "rails_credentials" {
+  metadata {
+    name      = "rails-credentials"
+    namespace = "application"
+  }
+
+  data = {
+    "credentials.yml.enc" = data.railscred_inline.example.content
+  }
+}
+
+resource "kubernetes_deployment_v1" "rails" {
+  metadata {
+    name      = "rails"
+    namespace = "application"
+  }
+  spec {
+    template {
+      spec {
+        volume {
+          name = "rails-credentials"
+          secret {
+            secret_name = "rails-credentials"
+            items {
+              key  = "credentials.yml.enc"
+              path = "credentials.yml.enc"
+            }
+          }
+        }
+        container {
+          env_from {
+            secret_ref {
+              name = "rails"
+            }
+          }
+          volume_mount {
+            name       = "rails-credentials"
+            mount_path = "/app/config/credentials.yml.enc"
+            sub_path   = "credentials.yml.enc"
+            read_only  = true
+          }
+          port {
+            name           = "http"
+            container_port = 3000
+          }
+        }
+      }
+    }
+  }
+}
+```
 
 ## Development
 
@@ -31,4 +113,21 @@ TBD.
 
 ```shell
 goreleaser build --snapshot --clean
+```
+
+### Local Development Notes
+
+To use the Tofu provider locally:
+
+```shell
+cat > .terraformrc <<EOF
+provider_installation {
+    dev_overrides {
+        "jamesits/railscred" = "./dist/provider/linux_amd64_v1"
+    }
+    direct {}
+}
+EOF
+
+export TF_CLI_CONFIG_FILE="./.terraformrc"
 ```

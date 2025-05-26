@@ -9,27 +9,27 @@ import (
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ datasource.DataSource = &RailsCredentialsProviderDataSource{}
+var _ datasource.DataSource = &RailsCredentialsInlineDataSource{}
 
-func NewRailsCredentialsProviderDataSource() datasource.DataSource {
-	return &RailsCredentialsProviderDataSource{}
+func NewRailsCredentialsInlineDataSource() datasource.DataSource {
+	return &RailsCredentialsInlineDataSource{}
 }
 
-// RailsCredentialsProviderDataSource defines the data source implementation.
-type RailsCredentialsProviderDataSource struct{}
+// RailsCredentialsInlineDataSource defines the data source implementation.
+type RailsCredentialsInlineDataSource struct{}
 
-// RailsCredentialsProviderDataSourceModel describes the data source data model.
-type RailsCredentialsProviderDataSourceModel struct {
+// RailsCredentialsInlineDataSourceModel describes the data source data model.
+type RailsCredentialsInlineDataSourceModel struct {
 	MasterKey        types.String `tfsdk:"master_key"`
 	EncryptedContent types.String `tfsdk:"encrypted_content"`
 	DecryptedContent types.String `tfsdk:"content"`
 }
 
-func (d *RailsCredentialsProviderDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_provider"
+func (d *RailsCredentialsInlineDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_inline"
 }
 
-func (d *RailsCredentialsProviderDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *RailsCredentialsInlineDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
 		MarkdownDescription: "Reads and decrypts a Rails credentials file.",
@@ -53,15 +53,15 @@ func (d *RailsCredentialsProviderDataSource) Schema(ctx context.Context, req dat
 	}
 }
 
-func (d *RailsCredentialsProviderDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
+func (d *RailsCredentialsInlineDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
 	}
 }
 
-func (d *RailsCredentialsProviderDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data RailsCredentialsProviderDataSourceModel
+func (d *RailsCredentialsInlineDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var data RailsCredentialsInlineDataSourceModel
 
 	// Read Terraform configuration data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
