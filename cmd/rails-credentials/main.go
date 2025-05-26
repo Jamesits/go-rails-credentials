@@ -57,9 +57,11 @@ func (cli *Cli) AfterApply() error {
 		m, err := os.ReadFile(cli.MasterKeyFile)
 		if err == nil {
 			cli.MasterKey = strings.Trim(string(m), "\r\n")
+		} else if !os.IsNotExist(err) {
+			return fmt.Errorf("unable to read master key file %s: %w", cli.MasterKeyFile, err)
 		}
 	}
-	// If for some reason we are unable to read the existing credentials file, generate a new one:
+	// If master key file does not exist, generate a new one:
 	if cli.MasterKey == "" {
 		cli.MasterKey, err = credentials.RandomMasterKey()
 		cli.masterKeyGenerated = true
