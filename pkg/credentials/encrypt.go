@@ -44,6 +44,7 @@ func RandomMasterKey() (string, error) {
 // The master key should be a hex-encoded string of 32 hex characters (16 bytes).
 // The encrypted file content is expected to be in the format:
 // <base64-encoded-content><Separator><base64-encoded-iv><Separator><base64-encoded-tag>
+// The content is encrypted using AES-128-GCM.
 func Decrypt(MasterKey string, EncryptedFileContent string) (DecryptedFileContent []byte, err error) {
 	key, err := hex.DecodeString(MasterKey)
 	if err != nil {
