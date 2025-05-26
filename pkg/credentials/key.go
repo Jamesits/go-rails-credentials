@@ -24,5 +24,5 @@ func RandomMasterKey() (string, error) {
 }
 
 func SanitizeMasterKey(in string) string {
-	return strings.Trim(string(in), "\r\n")
+	return strings.Trim(in, "\r\n")
 }
