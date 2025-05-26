@@ -20,6 +20,8 @@ secret_key_base: %s
 `
 )
 
+// NewCredentialsFileContent generates a credentials.yml example.
+// This function is only used in the TUI.
 func NewCredentialsFileContent() (string, error) {
 	// generate secret_key_base
 	// https://github.com/rails/rails/blob/04df9bc3d120b51447bde54caa56e9237cb8da0e/railties/lib/rails/generators/rails/credentials/credentials_generator.rb#L42
