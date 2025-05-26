@@ -37,10 +37,12 @@ func (d *RailsCredentialsFileDataSource) Schema(ctx context.Context, req datasou
 		Attributes: map[string]schema.Attribute{
 			"master_key": schema.StringAttribute{
 				MarkdownDescription: "The master key",
+				Required:            true,
 				Sensitive:           true,
 			},
 			"encrypted_content": schema.StringAttribute{
 				MarkdownDescription: "The credentials file content",
+				Required:            true,
 			},
 			"content": schema.StringAttribute{
 				MarkdownDescription: "Decrypted credentials in YAML format",

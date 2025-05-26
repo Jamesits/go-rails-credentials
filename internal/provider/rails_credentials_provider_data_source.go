@@ -26,7 +26,7 @@ type RailsCredentialsProviderDataSourceModel struct {
 }
 
 func (d *RailsCredentialsProviderDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_file"
+	resp.TypeName = req.ProviderTypeName + "_provider"
 }
 
 func (d *RailsCredentialsProviderDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {

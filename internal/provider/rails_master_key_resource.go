@@ -28,7 +28,7 @@ type RailsMasterKeyResourceModel struct {
 }
 
 func (r *RailsMasterKeyResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_provider"
+	resp.TypeName = req.ProviderTypeName + "_master_key"
 }
 
 func (r *RailsMasterKeyResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {

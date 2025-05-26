@@ -21,10 +21,13 @@ builds:
     ignore:
       - goos: 'darwin'
         goarch: '386'
+      # missing cipher.NewGCMWithRandomNonce
+      - goos: 'freebsd'
+        goarch: 'arm'
     binary: 'rails-credentials'
   # Tofu provider
   - id: 'provider'
-    main: './cmd/rails-credentials-provider'
+    main: './cmd/terraform-provider-railscred'
     env:
       - 'CGO_ENABLED=0'
     mod_timestamp: '{{ .CommitTimestamp }}'
@@ -40,7 +43,10 @@ builds:
     ignore:
       - goos: 'darwin'
         goarch: '386'
-    binary: 'rails-credentials-provider_v{{ .Version }}'
+      # missing cipher.NewGCMWithRandomNonce
+      - goos: 'freebsd'
+        goarch: 'arm'
+    binary: 'terraform-provider-railscred_v{{ .Version }}'
 
 archives:
   - id: cli
@@ -50,7 +56,7 @@ archives:
   - id: provider
     ids: ['provider']
     formats: ['zip']
-    name_template: '{{ .ProjectName }}_provider_{{ .Version }}_{{ .Os }}_{{ .Arch }}'
+    name_template: 'terraform-provider-railscred_{{ .Version }}_{{ .Os }}_{{ .Arch }}'
 
 checksum:
   extra_files:
@@ -62,7 +68,7 @@ checksum:
 signs:
   - artifacts: checksum
     args:
-      # if you are using this in a GitHub action or some other automated pipeline, you 
+      # if you are using this in a GitHub action or some other automated pipeline, you
       # need to pass the batch flag to indicate its not interactive.
       - "--batch"
       - "--local-user"
