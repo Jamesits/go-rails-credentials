@@ -35,7 +35,7 @@ Notes:
 
 ### OpenTofu / Terraform Provider
 
-Decrypt the credentials on the fly:
+Decrypt the credentials on the fly (can also be used as a credentials validator):
 
 ```hcl
 data "railscred_file" "example" {
@@ -52,8 +52,10 @@ output "credentials" {
 Manage the plaintext credentials inside the Tofu config:
 
 ```hcl
+# generate a random master key
 resource "railscred_master_key" "example" {}
 
+# plaintext credentials
 data "railscred_inline" "example" {
   master_key = railscred_master_key.example.master_key
   content    = <<-EOT
@@ -69,6 +71,12 @@ data "railscred_inline" "example" {
 secret_key_base:
 EOT
 }
+
+output "encrypted_credentials" {
+  value     = data.railscred_file.example.encrypted_content
+}
+
+# Example of using them in Kubernetes
 
 resource "kubernetes_secret_v1" "rails" {
   metadata {
