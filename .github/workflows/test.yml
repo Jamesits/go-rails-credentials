@@ -27,6 +27,8 @@ jobs:
         with:
           egress-policy: block
           allowed-endpoints: >
+            api.github.com:443
+            github.com:443
             goreleaser.com:443
             proxy.golang.org:443
 
@@ -59,6 +61,8 @@ jobs:
         with:
           egress-policy: block
           allowed-endpoints: >
+            api.github.com:443
+            github.com:443
             proxy.golang.org:443
 
       - uses: actions/checkout@v6
@@ -100,6 +104,8 @@ jobs:
         with:
           egress-policy: block
           allowed-endpoints: >
+            api.github.com:443
+            github.com:443
             proxy.golang.org:443
 
       - uses: actions/checkout@v6
@@ -138,6 +144,8 @@ jobs:
         with:
           egress-policy: block
           allowed-endpoints: >
+            api.github.com:443
+            github.com:443
             proxy.golang.org:443
 
       - uses: actions/checkout@v6
