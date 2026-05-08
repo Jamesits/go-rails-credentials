@@ -161,7 +161,7 @@ jobs:
             github.com:443
             release-assets.githubusercontent.com:443
             proxy.golang.org:443
-            checkpoint-api.hashicorp.com:443
+            get.opentofu.org:443
 
       - uses: actions/checkout@v6
 
