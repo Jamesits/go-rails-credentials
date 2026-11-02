@@ -3,7 +3,7 @@ module github.com/jamesits/go-rails-credentials
 go 1.25.8
 
 require (
-	github.com/alecthomas/kong v1.16.1
+	github.com/alecthomas/kong v1.17.0
 	github.com/hashicorp/terraform-plugin-framework v1.19.0
 	github.com/stretchr/testify v1.12.1
 )
